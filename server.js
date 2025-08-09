@@ -110,6 +110,7 @@ app.post('/groups', async (req, res) => {
 // Join group (creates user & adds join request)
 app.post('/groups/join', async (req, res) => {
   try {
+    console.log('Join group request with body:', req.body);
     const { joinCode, userId } = req.body;
     if (!joinCode || !userId) {
       return res.status(400).json({ message: 'Missing joinCode or userId' });
@@ -123,9 +124,10 @@ app.post('/groups/join', async (req, res) => {
 
     // Only add to joinRequests if not already in group
     if (!group.members.includes(user._id) && !group.joinRequests.includes(user._id)) {
-      group.joinRequests.push(user.name);
+      group.joinRequests.push(user._id);
       await group.save();
     }
+    console.log(group)
 
     return res.json({ message: 'Join request sent', user });
   } catch (err) {
