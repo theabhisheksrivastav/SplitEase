@@ -159,9 +159,10 @@ app.post('/groups/approve-join', async (req, res) => {
 app.get('/groups/:id', async (req, res) => {
   try {
     const group = await Group.findById(req.params.id)
-      .populate('members', 'name')
-      .populate('joinRequests', 'name')
+      .populate('members')
+      .populate('joinRequests')
       .lean();
+      console.log(group)
     if (!group) return res.status(404).json({ message: 'Group not found' });
 
     const expenses = await Expense.find({ groupId: group._id }).populate('addedBy', 'name').lean();
