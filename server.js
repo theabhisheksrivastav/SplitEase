@@ -65,8 +65,17 @@ const TestimonialSchema = new mongoose.Schema({
 const Contact = mongoose.model('Contact', ContactSchema);
 const Testimonial = mongoose.model('Testimonial', TestimonialSchema);
 
+
+
+/** --- Helper: approval threshold (>50%) --- **/
+function approvalThreshold(memberCount) {
+  return Math.floor(memberCount / 2) + 1;
+}
+
+/** --- REST Routes --- **/
+
 // POST /contact - Add new contact
-router.post('/contact', async (req, res) => {
+app.post('/contact', async (req, res) => {
   try {
     const newContact = new Contact(req.body);
     const saved = await newContact.save();
@@ -77,7 +86,7 @@ router.post('/contact', async (req, res) => {
 });
 
 // POST /testimonial - Add new testimonial
-router.post('/testimonial', async (req, res) => {
+app.post('/testimonial', async (req, res) => {
   try {
     const newTestimonial = new Testimonial(req.body);
     const saved = await newTestimonial.save();
@@ -88,7 +97,7 @@ router.post('/testimonial', async (req, res) => {
 });
 
 // GET /testimonial - Get all testimonials
-router.get('/testimonial', async (req, res) => {
+app.get('/testimonial', async (req, res) => {
   try {
     const testimonials = await Testimonial.find().sort({ createdAt: -1 });
     res.status(200).json(testimonials);
@@ -96,13 +105,6 @@ router.get('/testimonial', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-/** --- Helper: approval threshold (>50%) --- **/
-function approvalThreshold(memberCount) {
-  return Math.floor(memberCount / 2) + 1;
-}
-
-/** --- REST Routes --- **/
 
 // Login or auto-create user
 app.post('/users/login', async (req, res) => {
