@@ -45,6 +45,58 @@ const User = mongoose.model('User', UserSchema);
 const Group = mongoose.model('Group', GroupSchema);
 const Expense = mongoose.model('Expense', ExpenseSchema);
 
+const ContactSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  message: { type: String, required: true },
+  plan: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+})
+
+const TestimonialSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  title: { type: String, required: true },
+  company: { type: String },
+  image: { type: String },
+  testimonial: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+})
+
+const Contact = mongoose.model('Contact', ContactSchema);
+const Testimonial = mongoose.model('Testimonial', TestimonialSchema);
+
+// POST /contact - Add new contact
+router.post('/contact', async (req, res) => {
+  try {
+    const newContact = new Contact(req.body);
+    const saved = await newContact.save();
+    res.status(200).json({ success: true, id: saved._id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /testimonial - Add new testimonial
+router.post('/testimonial', async (req, res) => {
+  try {
+    const newTestimonial = new Testimonial(req.body);
+    const saved = await newTestimonial.save();
+    res.status(200).json({ success: true, id: saved._id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /testimonial - Get all testimonials
+router.get('/testimonial', async (req, res) => {
+  try {
+    const testimonials = await Testimonial.find().sort({ createdAt: -1 });
+    res.status(200).json(testimonials);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /** --- Helper: approval threshold (>50%) --- **/
 function approvalThreshold(memberCount) {
   return Math.floor(memberCount / 2) + 1;
