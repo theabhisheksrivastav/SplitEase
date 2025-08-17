@@ -59,6 +59,7 @@ const TestimonialSchema = new mongoose.Schema({
   company: { type: String },
   image: { type: String },
   testimonial: { type: String, required: true },
+  verified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 })
 
