@@ -100,7 +100,7 @@ app.post('/testimonial', async (req, res) => {
 // GET /testimonial - Get all testimonials
 app.get('/testimonial', async (req, res) => {
   try {
-    const testimonials = await Testimonial.find().sort({ createdAt: -1 });
+    const testimonials = await Testimonial.find({ verified: true }).sort({ createdAt: -1 });
     res.status(200).json(testimonials);
   } catch (err) {
     res.status(500).json({ error: err.message });
